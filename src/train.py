@@ -27,7 +27,8 @@ parser.add_argument(
 )
 args = vars(parser.parse_args())
 
-# Training function.
+# Training function 
+# TODO: edit train part
 def train(model, trainloader, optimizer, criterion):
     model.train()
     print('Training')
@@ -88,10 +89,9 @@ def validate(model, testloader, criterion):
 
 if __name__ == '__main__':
     # Load the training and validation datasets.
-    dataset_train, dataset_valid, dataset_classes = get_datasets(args['pretrained'])
+    dataset_train, dataset_valid = get_datasets(args['pretrained'])
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
     print(f"[INFO]: Number of validation images: {len(dataset_valid)}")
-    print(f"[INFO]: Class names: {dataset_classes}\n")
     # Load the training and validation data loaders.
     train_loader, valid_loader = get_data_loaders(dataset_train, dataset_valid)
 
@@ -106,18 +106,11 @@ if __name__ == '__main__':
     model = build_model(
         pretrained=args['pretrained'], 
         fine_tune=True, 
-        num_classes=len(dataset_classes)
+        num_classes=2,
     ).to(device)
-    
-    # Total parameters and trainable parameters.
-    total_params = sum(p.numel() for p in model.parameters())
-    print(f"{total_params:,} total parameters.")
-    total_trainable_params = sum(
-        p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"{total_trainable_params:,} training parameters.")
 
     # Optimizer.
-    optimizer = optim.Adam(model.parameters(), lr=lr)
+    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     # Loss function.
     criterion = nn.CrossEntropyLoss()
 
@@ -138,7 +131,7 @@ if __name__ == '__main__':
         print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
         print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
         print('-'*50)
-        time.sleep(5)
+        # time.sleep(5)
         
     # Save the trained model weights.
     save_model(epochs, model, optimizer, criterion, args['pretrained'])

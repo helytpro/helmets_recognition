@@ -1,22 +1,46 @@
 import torch
+import os
+from PIL import Image
 
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader, Subset
+from torchvision import transforms
+from torch.utils.data import DataLoader
+from sklearn.model_selection import train_test_split
 
 # Required constants.
-ROOT_DIR = '../input/Chessman-image-dataset/Chess'
-VALID_SPLIT = 0.1
+# ROOT_DIR = '../input/Chessman-image-dataset/Chess'
 IMAGE_SIZE = 224 # Image size of resize when applying transforms.
-BATCH_SIZE = 16 
+BATCH_SIZE = 32
 NUM_WORKERS = 4 # Number of parallel processes for data preparation.
+
+
+# Функция для загрузки данных
+class CustomDataset(torch.utils.data.Dataset):
+    def __init__(self, image_folder, label_folder, image_files, label_files, transform=None):
+        self.image_folder = image_folder
+        self.label_folder = label_folder
+        self.image_files = image_files
+        self.label_files = label_files
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.image_files)
+
+    def __getitem__(self, idx):
+        img_path = os.path.join(self.image_folder, self.image_files[idx])
+        label_path = os.path.join(self.label_folder, self.label_files[idx])
+        image = Image.open(img_path).convert('RGB')
+        with open(label_path, 'r') as f:
+            label = int(f.read().strip())  # Предполагаем, что метка хранится в текстовом файле
+        if self.transform:
+            image = self.transform(image)
+        return image, label
+
 
 # Training transforms
 def get_train_transform(IMAGE_SIZE, pretrained):
     train_transform = transforms.Compose([
         transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
         transforms.RandomHorizontalFlip(p=0.5),
-        transforms.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
-        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
         transforms.ToTensor(),
         normalize_transform(pretrained)
     ])
@@ -45,34 +69,29 @@ def normalize_transform(pretrained):
         )
     return normalize
 
-def get_datasets(pretrained):
-    dataset = datasets.ImageFolder(
-        ROOT_DIR, 
-        transform=(get_train_transform(IMAGE_SIZE, pretrained))
-    )
-    dataset_test = datasets.ImageFolder(
-        ROOT_DIR, 
-        transform=(get_valid_transform(IMAGE_SIZE, pretrained))
-    )
-    dataset_size = len(dataset)
+def get_datasets(imagePath="images", labelPath="labels", pretrained=True):
+    image_files = [f for f in os.listdir(imagePath) if f.endswith(('jpg', 'png', 'jpeg'))]
+    label_files = [f for f in os.listdir(labelPath) if f.endswith('txt')]
 
-    # Calculate the validation dataset size.
-    valid_size = int(VALID_SPLIT*dataset_size)
-    # Radomize the data indices.
-    indices = torch.randperm(len(dataset)).tolist()
-    # Training and validation sets.
-    dataset_train = Subset(dataset, indices[:-valid_size])
-    dataset_valid = Subset(dataset_test, indices[-valid_size:])
+    assert len(image_files) == len(label_files), "Количество изображений и меток должно совпадать."
 
-    return dataset_train, dataset_valid, dataset.classes
+    train_images, test_images, train_labels, test_labels = train_test_split(
+    image_files, label_files, test_size=0.2, random_state=42)
+
+    train_dataset = CustomDataset(imagePath, labelPath,
+                                train_images, train_labels,
+                                transform=get_train_transform(IMAGE_SIZE, pretrained))
+    test_dataset = CustomDataset(imagePath, 
+                                labelPath, test_images, test_labels,
+                                transform=get_valid_transform(IMAGE_SIZE, pretrained))
+
+    return train_dataset, test_dataset
 
 def get_data_loaders(dataset_train, dataset_valid):
     train_loader = DataLoader(
         dataset_train, batch_size=BATCH_SIZE, 
-        shuffle=True, num_workers=NUM_WORKERS
-    )
+        shuffle=True)
     valid_loader = DataLoader(
         dataset_valid, batch_size=BATCH_SIZE, 
-        shuffle=False, num_workers=NUM_WORKERS
-    )
+        shuffle=False)
     return train_loader, valid_loader 

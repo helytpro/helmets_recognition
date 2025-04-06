@@ -14,7 +14,7 @@ def save_model(epochs, model, optimizer, criterion, pretrained):
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': criterion,
-                }, f"../outputs/model_pretrained_{pretrained}.pth")
+                }, f"model_pretrained_{pretrained}.pth") # мб слэш убирать не надо
 
 def save_plots(train_acc, valid_acc, train_loss, valid_loss, pretrained):
     """
@@ -33,7 +33,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, pretrained):
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend()
-    plt.savefig(f"../outputs/accuracy_pretrained_{pretrained}.png")
+    plt.savefig(f"accuracy_pretrained_{pretrained}.png")
     
     # loss plots
     plt.figure(figsize=(10, 7))
