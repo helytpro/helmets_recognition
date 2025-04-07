@@ -1,6 +1,0 @@
-outs:
-- md5: 047afb00002cfce38ede7770342f0abd.dir
-  size: 4265
-  nfiles: 4265
-  hash: md5
-  path: labels_yolo

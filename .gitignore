@@ -1,8 +1,12 @@
 /helmets
 /images
 /labels
-/images_yolo
-/labels_yolo
 yolo11m.pt
 model_pretrained_False.pth
 accuracy_pretrained_False.png
+/images_yolo
+/labels_yolo
+model_pretrained_True.pth
+accuracy_pretrained_True.png
+loss_pretrained_True.png
+metrics.json

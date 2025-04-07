@@ -1,6 +1,0 @@
-outs:
-- md5: e51348ca48b98ae70c33ef5c79a4494f.dir
-  size: 117852904
-  nfiles: 4265
-  hash: md5
-  path: images_yolo
