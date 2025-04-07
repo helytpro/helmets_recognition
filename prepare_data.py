@@ -1,19 +1,20 @@
 import json
-from PIL import Image, ImageDraw
-import os, shutil
+import os
+import shutil
 import cv2
-import time
 import re
 from ultralytics import YOLO
+import mediapipe as mp
+
+base_directory = "helmets"
+images_folder = "images_yolo"
+labels_folder = "labels_yolo"
+
+DIST_THRESHOLD = 50
 
 
 def distance(pt1, pt2):
     return int(((pt1[0] - pt2[0])**2 + (pt1[1] - pt2[1])**2)**(0.5))
-
-
-base_directory = r"C:\Users\Vladimir\helmets_recognition\helmets"
-images_folder = "images_yolo"
-labels_folder = "labels_yolo"
 
 model = YOLO("yolo11m.pt")
 
@@ -64,6 +65,22 @@ for root, dirs, files in os.walk(base_directory):
                                 if (centers_distance < dist_inter):
                                     box_target = box
                                     dist_inter = centers_distance
+                        
+                        # проверка близости боксов 
+                        crop_width = abs(x1 - x2)
+                        crop_height = abs(y1 - y2)
+                        min_crop = min(crop_width, crop_height)
+
+                        target_width = abs(box_target[0] - box_target[2])
+                        target_width = abs(box_target[1] - box_target[3])
+                        min_target = min(target_width, target_width)
+
+                        threshold = min(min_crop, min_target)
+
+                        # Порог можно подбирать адаптивно или зафиксировать
+                        if not (dist_inter < threshold): # DIST_THRESHOLD - если фиксировать
+                            continue 
+
                         xx1, xx2 = int(box_target[0]), int(box_target[2])
                         yy1, yy2 = int(box_target[1]), int(box_target[1] + (box_target[3] - box_target[1])/3)
                         crop_yolo = img[yy1:yy2, xx1:xx2]

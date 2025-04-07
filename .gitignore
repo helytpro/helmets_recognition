@@ -3,3 +3,6 @@
 /labels
 /images_yolo
 /labels_yolo
+yolo11m.pt
+model_pretrained_False.pth
+accuracy_pretrained_False.png

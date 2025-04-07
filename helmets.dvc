@@ -1,0 +1,6 @@
+outs:
+- md5: bccbab73349895029ba0988acf4d687b.dir
+  size: 1485177232
+  nfiles: 4347
+  hash: md5
+  path: helmets

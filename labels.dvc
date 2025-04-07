@@ -1,0 +1,6 @@
+outs:
+- md5: f67fd029644deaf586bc0424fdad9b32.dir
+  size: 4560
+  nfiles: 4560
+  hash: md5
+  path: labels

@@ -1,0 +1,6 @@
+outs:
+- md5: ee17872162ad066185a952fd84204ada.dir
+  size: 77998402
+  nfiles: 4560
+  hash: md5
+  path: images

@@ -7,7 +7,6 @@ from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 
 # Required constants.
-# ROOT_DIR = '../input/Chessman-image-dataset/Chess'
 IMAGE_SIZE = 224 # Image size of resize when applying transforms.
 BATCH_SIZE = 32
 NUM_WORKERS = 4 # Number of parallel processes for data preparation.
@@ -69,7 +68,7 @@ def normalize_transform(pretrained):
         )
     return normalize
 
-def get_datasets(imagePath="images", labelPath="labels", pretrained=True):
+def get_datasets(pretrained=True, imagePath="images", labelPath="labels"):
     image_files = [f for f in os.listdir(imagePath) if f.endswith(('jpg', 'png', 'jpeg'))]
     label_files = [f for f in os.listdir(labelPath) if f.endswith('txt')]
 
