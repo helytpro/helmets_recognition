@@ -1,0 +1,33 @@
+stages:
+  preprocess:
+    cmd: py -m prepare_data
+    deps:
+    - helmets
+    - prepare_data.py
+    outs:
+    - images_yolo
+    - labels_yolo
+  #train:
+   # cmd: py -m train -pt
+   # deps:
+   # - datasets.py
+   # - images
+   # - labels
+   # - model.py
+   # - train.py
+   # - utils.py
+    #outs:
+   #- model_pretrained_True.pth
+  evaluate:
+    cmd: py -m inference
+    deps:
+    - datasets.py
+    - images_yolo
+    - inference.py
+    - labels_yolo
+    - model.py
+    - model_pretrained_True.pth
+    - utils.py
+    metrics:
+    - metrics.json:
+        cache: false

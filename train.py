@@ -13,7 +13,7 @@ from utils import save_model, save_plots
 # construct the argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '-e', '--epochs', type=int, default=20,
+    '-e', '--epochs', type=int, default=25,
     help='Number of epochs to train our network for'
 )
 parser.add_argument(
@@ -88,6 +88,8 @@ def validate(model, testloader, criterion):
     return epoch_loss, epoch_acc
 
 if __name__ == '__main__':
+
+    fine_tune = False # TODO: make fine_tune a hyp.param 
     # Load the training and validation datasets.
     dataset_train, dataset_valid = get_datasets(args['pretrained'])
     print(f"[INFO]: Number of training images: {len(dataset_train)}")
@@ -103,16 +105,20 @@ if __name__ == '__main__':
     print(f"Learning rate: {lr}")
     print(f"Epochs to train for: {epochs}\n")
 
-    model = build_model(
-        pretrained=args['pretrained'], 
-        fine_tune=True, 
-        num_classes=2,
-    ).to(device)
-
-    # Optimizer.
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    # Loss function.
-    criterion = nn.CrossEntropyLoss()
+    if fine_tune:
+        model = build_model()
+        checkpoint = torch.load('model_pretrained_True.pth', weights_only=False) # FALSE OR TRUE
+        print('Loading trained model weights...')
+        model.load_state_dict(checkpoint['model_state_dict'])
+        criterion = checkpoint['loss']
+    else:
+        model = build_model(
+            pretrained=args['pretrained'], 
+            fine_tune=True, 
+            num_classes=2,
+        ).to(device)
+        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        criterion = nn.CrossEntropyLoss()
 
     # Lists to keep track of losses and accuracies.
     train_loss, valid_loss = [], []

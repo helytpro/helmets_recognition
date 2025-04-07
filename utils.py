@@ -2,6 +2,7 @@ import torch
 import matplotlib
 import matplotlib.pyplot as plt
 import json
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 matplotlib.style.use('ggplot')
 
@@ -53,30 +54,6 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, pretrained):
     plt.savefig(f"loss_pretrained_{pretrained}.png")
 
 
-def save_metrics_plot(precision, recall, pretrained):
-
-    # accuracy plots
-    plt.figure(figsize=(10, 7))
-    plt.plot(
-        precision, color='blue', linestyle='-', 
-        label='Precision'
-    )
-    plt.xlabel('Epochs')
-    plt.ylabel('precision')
-    plt.savefig(f"precision_pretrained_{pretrained}.png")
-    
-    # loss plots
-    plt.figure(figsize=(10, 7))
-    plt.plot(
-        recall, color='red', linestyle='-', 
-        label='Recall'
-    )
-    plt.xlabel('Epochs')
-    plt.ylabel('recall')
-    plt.legend()
-    plt.savefig(f"Recall_pretrained_{pretrained}.png")
-
-
 def accuracy(outputs, labels):
     _, preds = torch.max(outputs, 1)
     correct = (preds == labels).sum().item()
@@ -100,9 +77,9 @@ def precision(outputs, labels):
 class metrics_calculation():
     def __init__(self, targets, predictions):
         self.classes = ['OFF', 'ON']
-        self.accuracy = accuracy(targets, predictions)
-        self.precision = recall(targets, predictions)
-        self.recall = precision(targets, predictions)
+        self.accuracy = accuracy_score(targets, predictions)
+        self.precision = precision_score(targets, predictions, average=None)
+        self.recall = recall_score(targets, predictions, average=None)
 
     def print_metrics(self):
         print(f"Accuracy={self.accuracy:.2f}")
