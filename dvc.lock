@@ -46,16 +46,16 @@ stages:
       size: 772
     - path: train.py
       hash: md5
-      md5: 9ae39fcaa12b3cf00d69c5f61aa1e66a
-      size: 5306
+      md5: c7122d22c7c1dfc2cbd199be9f8d433c
+      size: 5451
     - path: utils.py
       hash: md5
-      md5: 2aeb8f5ec5870d685e2f09472cad7e4d
-      size: 3054
+      md5: f56725a40a1d32d5aa7554240797cce0
+      size: 3273
     outs:
     - path: model_pretrained_True.pth
       hash: md5
-      md5: 54c4bc57694e989045bca7a988cd492e
+      md5: c3dd1e39e8433954949691e006d00fa8
       size: 32443206
   evaluate:
     cmd: py -m inference
@@ -71,8 +71,8 @@ stages:
       nfiles: 4265
     - path: inference.py
       hash: md5
-      md5: ce636987114288ecae61e6737fe29479
-      size: 2406
+      md5: 78ffaf0dd18a3a48f7adee7a4c4aa266
+      size: 2484
     - path: labels_yolo
       hash: md5
       md5: 047afb00002cfce38ede7770342f0abd.dir
@@ -84,14 +84,14 @@ stages:
       size: 772
     - path: model_pretrained_True.pth
       hash: md5
-      md5: 54c4bc57694e989045bca7a988cd492e
+      md5: c3dd1e39e8433954949691e006d00fa8
       size: 32443206
     - path: utils.py
       hash: md5
-      md5: c42aeb5b1b1b1cce67647c3bb46f1e08
-      size: 3174
+      md5: f56725a40a1d32d5aa7554240797cce0
+      size: 3273
     outs:
     - path: metrics.json
       hash: md5
-      md5: 9398982ea92b6200c44d962d419875f2
+      md5: 244411f2953403fd12b7d9fc9215675b
       size: 113
