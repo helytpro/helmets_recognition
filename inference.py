@@ -7,12 +7,11 @@ from tqdm.auto import tqdm
 import json
 
 from model import build_model
-from train import validate
 from datasets import get_datasets, get_data_loaders
 from utils import accuracy, precision, recall
 
 # Constants.
-DATA_PATH =  'images_yolo'  #'../input/test_images'
+DATA_PATH =  'images_yolo' 
 LABELS_PATH = 'labels_yolo'
 IMAGE_SIZE = 224
 DEVICE = 'cpu'

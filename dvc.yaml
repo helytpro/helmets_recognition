@@ -4,30 +4,31 @@ stages:
     deps:
     - helmets
     - prepare_data.py
+    - yolov8n-pose.pt
     outs:
     - images_yolo
     - labels_yolo
   train:
     cmd: py -m train -pt
     deps:
-    - datasets.py
+    # - datasets.py
     - images
     - labels
-    - model.py
+    # - model.py
     - train.py
-    - utils.py
+    # - utils.py
     outs:
     - model_pretrained_True.pth
   evaluate:
     cmd: py -m inference
     deps:
-    - datasets.py
+    # - datasets.py
     - images_yolo
     - inference.py
     - labels_yolo
-    - model.py
+    # - model.py
     - model_pretrained_True.pth
-    - utils.py
+    # - utils.py
     metrics:
     - metrics.json:
         cache: true

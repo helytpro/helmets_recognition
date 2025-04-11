@@ -68,10 +68,12 @@ def normalize_transform(pretrained):
         )
     return normalize
 
-def get_datasets(pretrained=True, imagePath="images", labelPath="labels"):
+def get_datasets(pretrained, imagePath, labelPath):
     image_files = [f for f in os.listdir(imagePath) if f.endswith(('jpg', 'png', 'jpeg'))]
     label_files = [f for f in os.listdir(labelPath) if f.endswith('txt')]
 
+
+    print(f"image files - {len(image_files)}, label files - {len(label_files)}")
     assert len(image_files) == len(label_files), "Количество изображений и меток должно совпадать."
 
     train_images, test_images, train_labels, test_labels = train_test_split(

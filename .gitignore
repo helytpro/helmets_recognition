@@ -10,3 +10,4 @@ model_pretrained_True.pth
 accuracy_pretrained_True.png
 loss_pretrained_True.png
 metrics.json
+/yolov8n-pose.pt
